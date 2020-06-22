@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <th:block th:replace="fragments :: resources">blank</th:block>
+    <title>Metamong - Semantic</title>
+
+
+
+</head>
+<body>
+
+<!-- Following Menu (hidden) -->
+<div class="ui large top fixed hidden menu">
+    <div class="ui container">
+        <a class="active item">Home</a>
+        <a class="item">Work</a>
+        <a class="item">Company</a>
+        <a class="item">Careers</a>
+
+        <div class="right item">
+            <a class="ui item" th:href="@{/login}" sec:authorize="!isAuthenticated()">Log in</a>
+            <a class="ui item" th:href="@{/sign-up}" sec:authorize="!isAuthenticated()">Sign Up</a>
+            <a class="ui icon item" th:href="@{/notification}" sec:authorize="isAuthenticated()">
+                <i class="bell outline icon "></i>
+            </a>
+            <a class="ui icon item" th:href="@{/notification}" sec:authorize="isAuthenticated()">
+                <i class="plus icon"></i>
+            </a>
+            <a href="#" class="ui floated dropdown item" sec:authorize="isAuthenticated()">
+<!--                <svg data-jdentication-value="user1993" th:data-jdentication-value="${#authentication.name}" width="24" height="24"></svg>-->
+                <span class="text" sec:authentication="name">name</span>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="header" sec:authentication="name">Name</div>
+                    <div class="divider"></div>
+                    <div class="item" th:href="@{'/profile/' + ${#authentication.name}}">profile</div>
+                    <div class="item" th:href="@{/settings/profile}">Settings</div>
+                    <div class="item">
+                        <form method="post" th:action="@{/logout}">
+                            <button class="ui button" type="submit">logout</button>
+                        </form>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar Menu -->
+<div class="ui vertical inverted sidebar menu">
+    <a class="active item">Home</a>
+    <a class="item">Work</a>
+    <a class="item">Company</a>
+    <a class="item">Careers</a>
+    <a class="item">Login</a>
+    <a class="item">Signup</a>
+</div>
+
+
+<!-- Page Contents -->
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment">
+        <!--    nav    -->
+        <nav th:replace="fragments :: main-nav"></nav>
+
+        <!--    TODO 이메일 인증 재전송 Hint 23.    -->
+
+        <!-- if.. email wasn't verified  -->
+        <div class="ui text container" th:if="${account != null && !account?.emailVerified}" style="margin-top: 30px;">
+            <div class="ui floating warning message">
+                <i class="close icon"></i>
+                <div class="header">
+                    <a th:href="@{/check-email}">계정 인증 이메일</a>을 확인하세요.
+                </div>
+                <p>That offer has expired</p>
+            </div>
+        </div>
+
+        <div class="ui text container">
+            <h1 class="ui inverted header">
+                Imagine-a-Company
+            </h1>
+            <h2>Do whatever you want when you want to.</h2>
+            <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+        </div>
+
+
+
+    </div>
+
+    <div class="ui vertical stripe segment">
+        <div class="ui middle aligned stackable grid container">
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 class="ui header">We Help Companies and Companions</h3>
+                    <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
+                    <h3 class="ui header">We Make Bananas That Can Dance</h3>
+                    <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+                </div>
+                <div class="six wide right floated column">
+                    <img src="#" class="ui large bordered rounded image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="center aligned column">
+                    <a class="ui huge button">Check Them Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui vertical stripe quote segment">
+        <div class="ui equal width stackable internally celled grid">
+            <div class="center aligned row">
+                <div class="column">
+                    <h3>"What a Company"</h3>
+                    <p>That is what they all say about us</p>
+                </div>
+                <div class="column">
+                    <h3>"I shouldn't have gone with their competitor."</h3>
+                    <p>
+                        <img src="/images/mock_matt.jpg" class="ui avatar image"> <b>Nan</b> Chief Fun Officer Acme Toys
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui vertical stripe segment">
+        <div class="ui text container">
+            <h3 class="ui header">Breaking The Grid, Grabs Your Attention</h3>
+            <p>Instead of focusing on content creation and hard work, we have learned how to master the art of doing nothing by providing massive amounts of whitespace and generic content that can seem massive, monolithic and worth your attention.</p>
+            <a class="ui large button">Read More</a>
+            <h4 class="ui horizontal header divider">
+                <a href="#">Case Studies</a>
+            </h4>
+            <h3 class="ui header">Did We Tell You About Our Bananas?</h3>
+            <p>Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.</p>
+            <a class="ui large button">I'm Still Quite Interested</a>
+        </div>
+    </div>
+
+
+    <!--  footer  -->
+    <footer th:replace="fragments :: footer"></footer>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        // fix menu when passed
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function() {
+                    $('.fixed.menu').transition('fade in');
+                },
+                onBottomPassedReverse: function() {
+                    $('.fixed.menu').transition('fade out');
+                }
+            })
+        ;
+
+        // create sidebar and attach to menu open
+        $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item')
+        ;
+
+        // show dropdown on hover
+        $('.menu  .ui.dropdown').dropdown({
+            on: 'hover'
+        });
+
+    });
+</script>
+</body>
+
+</html>

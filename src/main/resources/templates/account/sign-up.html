@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="fragments :: resources">blank</th:block>
+    <title>Sign Up form</title>
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+
+        .ui.error.message > header {
+            text-align: justify;
+        }
+    </style>
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <img src="/images/logo-on-removebg.png" class="image">
+            <div class="content">
+                Sign Up your account
+            </div>
+        </h2>
+        <form class="ui large form needs-validation" action="#" th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>
+            <div class="ui stacked segment  ">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="nickname" placeholder="Nickname" th:field="*{nickname}" required minlength="3" maxlength="20">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="envelope outline icon"></i>
+                        <input type="email" name="email" placeholder="E-mail address" th:field="*{email}">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="Password" th:field="*{password}" required min="8" max="30">
+                    </div>
+                </div>
+                <button class="ui fluid large teal submit button">
+                    Sign Up
+                </button>
+                <!--  TODO SUBMIT ERROR - UI 처리하기   -->
+                <div class="ui error message">
+                    <div class="header">We had some issues</div>
+                    <ul class="list">
+                        <li th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Please check your nickname</li>
+                        <li th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Please check your email</li>
+                        <li th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Please check your password</li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+
+<!--        <div class="ui message">-->
+<!--            New to us? <a href="#" th:href="@{/signup}">Sign Up</a>-->
+<!--        </div>-->
+    </div>
+</div>
+
+<script>
+
+    (function () {
+        'use strict';
+        window.addEventListener('load', validateForm, false);
+    }());
+
+    // $('.ui.form').form({
+    //     fields: {
+    //         nickname : 'empty',
+    //         email : 'empty',
+    //         password : ['minLength[6]', 'empty'],
+    //         skills   : ['minCount[2]', 'empty'],
+    //         terms    : 'checked'
+    //     }
+    // });
+
+    $('.ui.form').form({
+        fields: {
+
+            username: {
+                identifier: 'nickname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : 'Please enter a nickname'
+                    }
+                ]
+            },
+            email: {
+                identifier: 'email',
+                rules: [
+                    {
+                        type    : 'empty',
+                        prompt  : 'Please enter a email'
+                    }
+                ]
+            },
+            password: {
+                identifier: 'password',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : 'Please enter a password'
+                    },
+                    {
+                        type   : 'minLength[8]',
+                        prompt : 'Your password must be at least {ruleValue} characters'
+                    },
+                    {
+                        type   : 'maxLength[50]',
+                        prompt : 'Your password must be at most {ruleValue} characters'
+                    }
+                ]
+            }
+
+        }
+    });
+
+</script>
+</body>
+</html>

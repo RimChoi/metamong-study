@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments :: resources">blank</th:block>
+    <title>Sign Up form</title>
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <img src="/images/logo-on-removebg.png" class="image">
+            <div class="content">
+                Login your account
+            </div>
+        </h2>
+        <form class="ui large form needs-validation" action="#" th:action="@{/login}" method="post" novalidate>
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" id="username" name="username" placeholder="이메일 또는 닉네임" required minlength="3" maxlength="20">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" id="password" name="password" placeholder="Password" required min="8" max="30">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="rememberMe" name="remember-me" tabindex="0" class="hidden">
+                        <label for="rememberMe">로그인 유지</label>
+                    </div>
+                </div>
+                <button class="ui fluid large teal submit button">
+                    Login
+                </button>
+            </div>
+            <!--  TODO SUBMIT ERROR - UI 처리하기   -->
+            <div class="ui error message" th:if="${param.error}">
+                <p>이메일(또는 닉네임)과 패스워드가 정확하지 않습니다.</p>
+                <p>또는 확인되지 않은 이메일을 사용했습니다. 이메일을 확인해 주세요.</p>
+                <p>
+                    확인 후 다시 입력하시거나, <a href="#" th:href="@{/find-password}">패스워드 찾기</a>를 이용하세요.
+                </p>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+    (function () {
+        'use strict';
+        window.addEventListener('load', validateForm, false);
+    }());
+
+</script>
+</body>
+</html>
