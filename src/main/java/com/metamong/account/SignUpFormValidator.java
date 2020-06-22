@@ -23,7 +23,6 @@ public class SignUpFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        //TODO E-MAIL, NICKNAME 검증
         SignUpForm signUpForm = (SignUpForm) target;
 
         if (accountRepository.existsByNickname(signUpForm.getNickname())) {

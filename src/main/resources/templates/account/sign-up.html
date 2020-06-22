@@ -1,33 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <!-- Standard Meta -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-    <!-- Site Properties -->
+    <th:block th:replace="fragments :: resources">blank</th:block>
     <title>Sign Up form</title>
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/reset.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/site.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/container.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/grid.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/header.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/image.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/menu.css">
-
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/divider.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/segment.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/form.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/input.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/button.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/list.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/message.css">
-    <link rel="stylesheet" type="text/css" href="/webjars/Semantic-UI/2.4.1/components/icon.css">
-
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/webjars/Semantic-UI/2.4.1/components/form.js"></script>
-    <script src="/webjars/Semantic-UI/2.4.1/components/transition.js"></script>
     <style type="text/css">
         body {
             background-color: #DADADA;
@@ -40,6 +17,10 @@
         }
         .column {
             max-width: 450px;
+        }
+
+        .ui.error.message > header {
+            text-align: justify;
         }
     </style>
 
@@ -54,7 +35,7 @@
             </div>
         </h2>
         <form class="ui large form needs-validation" action="#" th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>
-            <div class="ui stacked segment">
+            <div class="ui stacked segment  ">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
@@ -64,22 +45,28 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="envelope outline icon"></i>
-                        <input type="text" name="email" placeholder="E-mail address" th:field="*{email}">
+                        <input type="email" name="email" placeholder="E-mail address" th:field="*{email}">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" placeholder="Password" th:field="*{password}">
+                        <input type="password" name="password" placeholder="Password" th:field="*{password}" required min="8" max="30">
                     </div>
                 </div>
-                <div class="ui fluid large teal submit button">
-                    Login
+                <button class="ui fluid large teal submit button">
+                    Sign Up
+                </button>
+                <!--  TODO SUBMIT ERROR - UI 처리하기   -->
+                <div class="ui error message">
+                    <div class="header">We had some issues</div>
+                    <ul class="list">
+                        <li th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Please check your nickname</li>
+                        <li th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Please check your email</li>
+                        <li th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Please check your password</li>
+                    </ul>
                 </div>
             </div>
-
-            <div class="ui error message"></div>
-
         </form>
 
 <!--        <div class="ui message">-->
@@ -87,12 +74,66 @@
 <!--        </div>-->
     </div>
 </div>
-    <script>
-        $(document).ready(function() {
-            $('.submit').click(function() {
-                $('form.form').submit();
-            })
-        });
-    </script>
+
+<script>
+
+    (function () {
+        'use strict';
+        window.addEventListener('load', validateForm, false);
+    }());
+
+    // $('.ui.form').form({
+    //     fields: {
+    //         nickname : 'empty',
+    //         email : 'empty',
+    //         password : ['minLength[6]', 'empty'],
+    //         skills   : ['minCount[2]', 'empty'],
+    //         terms    : 'checked'
+    //     }
+    // });
+
+    $('.ui.form').form({
+        fields: {
+
+            username: {
+                identifier: 'nickname',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : 'Please enter a nickname'
+                    }
+                ]
+            },
+            email: {
+                identifier: 'email',
+                rules: [
+                    {
+                        type    : 'empty',
+                        prompt  : 'Please enter a email'
+                    }
+                ]
+            },
+            password: {
+                identifier: 'password',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : 'Please enter a password'
+                    },
+                    {
+                        type   : 'minLength[8]',
+                        prompt : 'Your password must be at least {ruleValue} characters'
+                    },
+                    {
+                        type   : 'maxLength[50]',
+                        prompt : 'Your password must be at most {ruleValue} characters'
+                    }
+                ]
+            }
+
+        }
+    });
+
+</script>
 </body>
 </html>

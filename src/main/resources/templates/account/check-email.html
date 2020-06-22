@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="fragments :: resources">check-email</th:block>
+    <title>Homepage - Semantic</title>
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Contents -->
+    <div class="pusher">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <!--    nav    -->
+            <nav th:replace="fragments :: main-nav"></nav>
+
+            <!--  container  -->
+            <div class="ui container">
+
+                <!-- if error occur  -->
+                <div class="ui message negative" th:if="${error != null}">
+                    <div class="header" th:text="${error}"></div>
+                    <p th:text="${email}">your@email.com</p>
+                </div>
+
+                <!-- if error doesn't exist  -->
+                <div class="ui message info" th:if="${error == null}" style="margin-top: 30px;">
+                    <div class="header" th:text="${email}">your@email.com</div>
+                    <p>서비스를 사용하려면 인증 메일을 확인하세요.</p>
+                    <a class="ui primary basic button" th:href="@{/resend-confirm-email}">인증 이메일 다시 보내기</a>
+                </div>
+            </div>
+        </div>
+
+
+        <!--  footer  -->
+        <footer th:replace="fragments :: footer"></footer>
+    </div>
+
+</body>
+</html>
